@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الزراعة الأردنية | Ultra-Pro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-glow: #7ae582;
+            --secondary-glow: #25a18e;
+            --dark-bg: #050a07;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: var(--dark-bg);
+            background-image: 
+                radial-gradient(circle at 50% -20%, #1b4332 0%, transparent 50%),
+                radial-gradient(circle at 0% 100%, #081c15 0%, transparent 40%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .main-page { width: 100%; max-width: 1150px; display: block; }
+
+        .glass-box {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 50px;
+            padding: 80px 40px;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8);
+            text-align: center;
+        }
+
+        .jordan-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: rgba(206, 17, 38, 0.1);
+            border: 1px solid #ce1126;
+            color: #ff9999;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            background: linear-gradient(135deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 35px;
+            margin-top: 50px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 35px;
+            padding: 50px 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+        }
+
+        .card:hover { transform: translateY(-15px); border-color: var(--primary-glow); }
+
+        #veg-fruit-section { display: none; margin-top: 40px; }
+        
+        .count-badge {
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+            color: var(--dark-bg);
+            padding: 5px 25px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(122, 229, 130, 0.4);
+        }
+
+        .search-box { width: 100%; max-width: 500px; margin: 0 auto 30px; position: relative; }
+        .search-box input {
+            width: 100%; padding: 15px 50px 15px 20px; border-radius: 20px;
+            border: 1px solid var(--primary-glow); background: rgba(255,255,255,0.05); color: #fff;
+        }
+        .items-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 15px; max-height: 500px; overflow-y: auto; padding: 10px;
+        }
+        .item-btn {
+            padding: 15px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 15px; color: #fff; cursor: pointer; transition: 0.3s; text-align: center;
+        }
+        .item-btn:hover { background: var(--primary-glow); color: var(--dark-bg); }
+        .item-btn i { display: block; font-size: 1.5rem; margin-bottom: 8px; }
+
+        .details-page {
+            display: none; width: 100%; max-width: 900px;
+            background: var(--glass-bg); backdrop-filter: blur(25px);
+            border-radius: 40px; padding: 40px; border: 1px solid var(--primary-glow);
+            animation: fadeIn 0.5s ease;
+        }
+        .details-icon { font-size: 4rem; color: var(--primary-glow); text-align: center; margin-bottom: 10px; }
+        .details-title { font-size: 2.5rem; text-align: center; margin-bottom: 30px; color: #fff; border-bottom: 1px solid rgba(122, 229, 130, 0.3); padding-bottom: 10px; }
+        
+        .info-grid { display: grid; grid-template-columns: 1fr; gap: 20px; text-align: right; }
+        .info-section { background: rgba(255,255,255,0.03); padding: 20px; border-radius: 20px; border-right: 4px solid var(--primary-glow); }
+        .info-section h4 { color: var(--primary-glow); margin-bottom: 10px; font-size: 1.3rem; }
+        .info-section p { line-height: 1.8; color: #cbd5e1; white-space: pre-line; }
+
+        .back-btn {
+            display: block; width: fit-content; margin: 30px auto 0;
+            padding: 12px 35px; border-radius: 15px; border: none;
+            background: var(--primary-glow); color: var(--dark-bg);
+            font-weight: bold; cursor: pointer; transition: 0.3s;
+        }
+
+        .sub-menu { display: none; margin-top: 20px; gap: 10px; justify-content: center; }
+        .btn-sub { padding: 10px 20px; border-radius: 12px; border: 1px solid var(--primary-glow); background: transparent; color: var(--primary-glow); cursor: pointer; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+
+    <div id="mainPage" class="main-page">
+        <div class="glass-box">
+            <header class="header">
+                <div class="jordan-badge"><i class="fa-solid fa-location-dot"></i> مخصص حصرياً للمملكة الأردنية الهاشمية</div>
+                <h1>إرث الأرض 🌳</h1>
+                <p>دليل الزراعة الاحترافي المتوافق مع مناخ الأردن</p>
+            </header>
+
+            <div class="grid-container">
+                <div class="card" onclick="toggleSubMenu()">
+                    <div style="font-size: 3.5rem; margin-bottom: 20px;"><i class="fa-solid fa-seedling"></i></div>
+                    <h3>عالم النبات والزهور</h3>
+                    <div id="sub-menu-plants" class="sub-menu">
+                        <button class="btn-sub" onclick="event.stopPropagation(); openVegFruit()">الخضار والفواكه</button>
+                        <button class="btn-sub" onclick="event.stopPropagation(); alert('قريباً الزهور')">الزهور والزينة</button>
+                    </div>
+                </div>
+                <div class="card" onclick="alert('قسم المواعيد')">
+                    <div style="font-size: 3.5rem; margin-bottom: 20px;"><i class="fa-solid fa-calendar-check"></i></div>
+                    <h3>مواقيت الخير للغرس</h3>
+                </div>
+                <div class="card" onclick="alert('قسم التسميد')">
+                    <div style="font-size: 3.5rem; margin-bottom: 20px;"><i class="fa-solid fa-flask-vial"></i></div>
+                    <h3>دليل التسميد والنمو</h3>
+                </div>
+            </div>
+
+            <div id="veg-fruit-section">
+                <div class="count-badge">115 صنف زراعي</div>
+                <div class="search-box">
+                    <i class="fa-solid fa-magnifying-glass" style="position:absolute; right:20px; top:18px; color:var(--primary-glow)"></i>
+                    <input type="text" id="searchInput" onkeyup="filterItems()" placeholder="ابحث عن صنف...">
+                </div>
+                <div class="items-grid" id="itemsGrid"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="detailsPage" class="details-page">
+        <div id="detailsIcon" class="details-icon"></div>
+        <h2 id="detailsTitle" class="details-title"></h2>
+        <div id="detailsContent" class="info-grid"></div>
+        <button class="back-btn" onclick="goBack()"><i class="fa-solid fa-house"></i> العودة للرئيسية</button>
+    </div>
+
+    <script>
+        const vegFruitData = [
+            // القائمة كاملة 115 صنف
+            { name: "بندورة", icon: "fa-solid fa-apple-whole" }, { name: "خيار", icon: "fa-solid fa-leaf" },
+            { name: "كوسا", icon: "fa-solid fa-seedling" }, { name: "باذنجان", icon: "fa-solid fa-eggplant" },
+            { name: "فلفل حلو", icon: "fa-solid fa-pepper-hot" }, { name: "فلفل حار", icon: "fa-solid fa-pepper-hot" },
+            { name: "بطاطا", icon: "fa-solid fa-circle" }, { name: "بصل", icon: "fa-solid fa-clover" },
+            { name: "تفاح", icon: "fa-solid fa-apple-whole" }, { name: "برتقال", icon: "fa-solid fa-sun" },
+            { name: "ليمون", icon: "fa-solid fa-lemon" }, { name: "موز", icon: "fa-solid fa-banana" },
+            { name: "عنب", icon: "fa-solid fa-grapes" }, { name: "فراولة", icon: "fa-solid fa-strawberry" },
+            { name: "بطيخ", icon: "fa-solid fa-watermelon-slice" }, { name: "بطاطا حلوة", icon: "fa-solid fa-circle" },
+            { name: "ثوم", icon: "fa-solid fa-clover" }, { name: "جزر", icon: "fa-solid fa-carrot" },
+            { name: "ملفوف", icon: "fa-solid fa-leaf" }, { name: "زهرة (قرنبيط)", icon: "fa-solid fa-clover" },
+            { name: "بروكلي", icon: "fa-solid fa-leaf" }, { name: "سبانخ", icon: "fa-solid fa-leaf" },
+            { name: "خس", icon: "fa-solid fa-leaf" }, { name: "جرجير", icon: "fa-solid fa-leaf" },
+            { name: "بقدونس", icon: "fa-solid fa-leaf" }, { name: "كزبرة", icon: "fa-solid fa-leaf" },
+            { name: "شبت", icon: "fa-solid fa-leaf" }, { name: "فاصوليا خضراء", icon: "fa-solid fa-seedling" },
+            { name: "بازلاء", icon: "fa-solid fa-seedling" }, { name: "لوبيا", icon: "fa-solid fa-seedling" },
+            { name: "حمص أخضر", icon: "fa-solid fa-seedling" }, { name: "فول أخضر", icon: "fa-solid fa-seedling" },
+            { name: "ذرة", icon: "fa-solid fa-wheat-awn" }, { name: "قرع", icon: "fa-solid fa-seedling" },
+            { name: "شمندر", icon: "fa-solid fa-circle" }, { name: "فجل", icon: "fa-solid fa-circle" },
+            { name: "كراث", icon: "fa-solid fa-leaf" }, { name: "يوسفي", icon: "fa-solid fa-sun" },
+            { name: "جريب فروت", icon: "fa-solid fa-sun" }, { name: "كمثرى", icon: "fa-solid fa-apple-whole" },
+            { name: "خوخ", icon: "fa-solid fa-apple-whole" }, { name: "مشمش", icon: "fa-solid fa-apple-whole" },
+            { name: "كرز", icon: "fa-solid fa-apple-whole" }, { name: "دراق", icon: "fa-solid fa-apple-whole" },
+            { name: "برقوق", icon: "fa-solid fa-apple-whole" }, { name: "رمان", icon: "fa-solid fa-apple-whole" },
+            { name: "تين", icon: "fa-solid fa-leaf" }, { name: "جوافة", icon: "fa-solid fa-sun" },
+            { name: "مانجا", icon: "fa-solid fa-sun" }, { name: "كيوي", icon: "fa-solid fa-leaf" },
+            { name: "تمر", icon: "fa-solid fa-tree" }, { name: "بلح", icon: "fa-solid fa-tree" },
+            { name: "نعنع", icon: "fa-solid fa-leaf" }, { name: "ميرمية", icon: "fa-solid fa-leaf" },
+            { name: "زعتر", icon: "fa-solid fa-leaf" }, { name: "إكليل الجبل", icon: "fa-solid fa-leaf" },
+            { name: "ريحان", icon: "fa-solid fa-leaf" }, { name: "لويزة", icon: "fa-solid fa-leaf" },
+            { name: "بابونج", icon: "fa-solid fa-clover" }, { name: "ينسون", icon: "fa-solid fa-seedling" },
+            { name: "شومر (شمر)", icon: "fa-solid fa-leaf" }, { name: "حلبة", icon: "fa-solid fa-seedling" },
+            { name: "حبق", icon: "fa-solid fa-leaf" }, { name: "كركم", icon: "fa-solid fa-circle" },
+            { name: "زنجبيل", icon: "fa-solid fa-circle" }, { name: "خبيزة", icon: "fa-solid fa-leaf" },
+            { name: "رجلة (فرفحينا)", icon: "fa-solid fa-leaf" }, { name: "هندباء", icon: "fa-solid fa-leaf" },
+            { name: "سلق بري", icon: "fa-solid fa-leaf" }, { name: "زعتر بري", icon: "fa-solid fa-leaf" },
+            { name: "بصل أخضر", icon: "fa-solid fa-leaf" }, { name: "ثوم أخضر", icon: "fa-solid fa-leaf" },
+            { name: "فلفل رومي ملوّن", icon: "fa-solid fa-pepper-hot" }, { name: "بندورة كرزية", icon: "fa-solid fa-apple-whole" },
+            { name: "خيار بلدي", icon: "fa-solid fa-leaf" }, { name: "خيار إنجليزي", icon: "fa-solid fa-leaf" },
+            { name: "كوسا لبنانية", icon: "fa-solid fa-seedling" }, { name: "باذنجان أسود", icon: "fa-solid fa-eggplant" },
+            { name: "باذنجان أبيض", icon: "fa-solid fa-eggplant" }, { name: "باذنجان مخطط", icon: "fa-solid fa-eggplant" },
+            { name: "قرع عسلي", icon: "fa-solid fa-seedling" }, { name: "قرع أخضر طويل", icon: "fa-solid fa-seedling" },
+            { name: "فطر زراعي", icon: "fa-solid fa-mushroom" }, { name: "فطر محاري", icon: "fa-solid fa-mushroom" },
+            { name: "ذرة صفراء علفية", icon: "fa-solid fa-wheat-awn" }, { name: "شعير", icon: "fa-solid fa-wheat-awn" },
+            { name: "قمح", icon: "fa-solid fa-wheat-awn" }, { name: "عدس", icon: "fa-solid fa-seedling" },
+            { name: "حمص يابس", icon: "fa-solid fa-seedling" }, { name: "فول يابس", icon: "fa-solid fa-seedling" },
+            { name: "أفوكادو", icon: "fa-solid fa-apple-whole" }, { name: "سفرجل", icon: "fa-solid fa-apple-whole" },
+            { name: "نكتارين", icon: "fa-solid fa-apple-whole" }, { name: "لوز بري", icon: "fa-solid fa-seedling" },
+            { name: "جوز (عين الجمل البري)", icon: "fa-solid fa-seedling" }, { name: "فستق حلبي بري", icon: "fa-solid fa-seedling" },
+            { name: "كاكا بري", icon: "fa-solid fa-apple-whole" }, { name: "توت بري", icon: "fa-solid fa-seedling" },
+            { name: "دراق مسطح", icon: "fa-solid fa-apple-whole" }, { name: "إجاص بري", icon: "fa-solid fa-apple-whole" },
+            { name: "مرمرية برية", icon: "fa-solid fa-leaf" }, { name: "قمح بري", icon: "fa-solid fa-wheat-awn" },
+            { name: "عدس بري", icon: "fa-solid fa-seedling" }, { name: "حمص بري", icon: "fa-solid fa-seedling" },
+            { name: "لوز", icon: "fa-solid fa-seedling" }, { name: "جوز (عين الجمل)", icon: "fa-solid fa-seedling" },
+            { name: "فستق حلبي", icon: "fa-solid fa-seedling" }, { name: "توت", icon: "fa-solid fa-seedling" },
+            { name: "توت أسود", icon: "fa-solid fa-seedling" }, { name: "توت أبيض", icon: "fa-solid fa-seedling" },
+            { name: "كاكا (خرما)", icon: "fa-solid fa-apple-whole" }, { name: "أناناس", icon: "fa-solid fa-sun" },
+            { name: "باشن فروت", icon: "fa-solid fa-leaf" }, { name: "كستناء", icon: "fa-solid fa-tree" },
+            { name: "تمر هندي", icon: "fa-solid fa-tree" }, { name: "قرنفل", icon: "fa-solid fa-leaf" },
+            { name: "قيصوم", icon: "fa-solid fa-leaf" }, { name: "قبار (كَبَر)", icon: "fa-solid fa-leaf" }
+        ];
+
+        const cropGuides = {
+            "بندورة": { region: "الأغوار، إربد، المفرق، الكرك.", seeds: "بذور في صواني (بيتموس).", transfer: "المسافة: 40–60 سم.", weather: "20–30 درجة.", organic: "زبل أبقار متحلل + كومبوست.", method: "نيتروجين بالبداية ثم بوتاسيوم للإثمار.", benefits: "فوائد: فيتامين C / أضرار: حموضة معدة." },
+            "زنجبيل": { region: "الأغوار الدافئة والبيوت البلاستيكية.", seeds: "من جذور (قطع زنجبيل تحتوي براعم).", transfer: "20–30 سم بين النباتات.", weather: "دافئ ورطب (20–30 درجة).", organic: "كومبوست + زبل متحلل خفيف.", method: "كل 3–4 أسابيع سماد عضوي خفيف.", benefits: "فوائد: يقوي المناعة ويساعد الهضم / أضرار: حرقة معدة." },
+            "حبق": { region: "المناطق المعتدلة والحدائق المنزلية.", seeds: "بالبذور أو العقل.", transfer: "15–25 سم بين النباتات.", weather: "15–30 درجة.", organic: "كومبوست خفيف.", method: "سماد عضوي كل 2–3 أسابيع.", benefits: "فوائد: مهدئ للأعصاب / أضرار: دوخة خفيفة." },
+            "قرنفل": { region: "البيوت البلاستيكية والمناطق المعتدلة.", seeds: "بالعقل أو البذور.", transfer: "20–30 سم.", weather: "15–25 درجة.", organic: "كومبوست + زبل متحلل خفيف.", method: "كل 3 أسابيع سماد عضوي خفيف.", benefits: "فوائد: مفيد للأسنان / أضرار: تهيج معدة." },
+            "لويزة": { region: "المناطق المعتدلة والمرتفعات.", seeds: "بالعقل أو الشتلات.", transfer: "30–40 سم.", weather: "15–28 درجة.", organic: "كومبوست خفيف.", method: "سماد عضوي كل شهر.", benefits: "فوائد: مهدئة للأعصاب / أضرار: نعاس زائد." },
+            "بابونج": { region: "إربد، عجلون، المفرق.", seeds: "بذور مباشرة على السطح.", transfer: "20–30 سم.", weather: "10–25 درجة.", organic: "كومبوست خفيف جدًا.", method: "سماد عضوي كل 3 أسابيع.", benefits: "فوائد: يساعد على النوم / أضرار: حساسية." },
+            "ينسون": { region: "إربد، عجلون، المفرق.", seeds: "بذور مباشرة (1–2 سم).", transfer: "15–25 سم.", weather: "15–25 درجة.", organic: "كومبوست خفيف.", method: "سماد عضوي كل 2–3 أسابيع.", benefits: "فوائد: يخفف الغازات / أضرار: نعاس." },
+            "شومر (شمر)": { region: "إربد، عجلون، المفرق.", seeds: "بذور مباشرة.", transfer: "20–30 سم.", weather: "15–28 درجة.", organic: "كومبوست + زبل متحلل.", method: "سماد عضوي خفيف كل شهر.", benefits: "فوائد: يحسن الهضم / أضرار: حساسية نادرة." },
+            "حلبة": { region: "المفرق، إربد، المناطق الجافة.", seeds: "بذور مباشرة.", transfer: "10–15 سم.", weather: "15–30 درجة.", organic: "كومبوست + زبل متحلل.", method: "سماد عضوي كل 2–3 أسابيع.", benefits: "فوائد: تقوي الجسم / أضرار: رائحة عرق." },
+            "قيصوم": { region: "المناطق الجبلية والبرية.", seeds: "بالبذور أو تقسيم النبات.", transfer: "20–30 سم.", weather: "معتدل إلى جاف.", organic: "كومبوست خفيف.", method: "سماد عضوي كل شهر.", benefits: "فوائد: مضاد التهاب / أضرار: دوخة." },
+            "قبار (كَبَر)": { region: "الأغوار والوديان الصخرية.", seeds: "بذور أو عقل.", transfer: "1–2 متر.", weather: "حار وجاف.", organic: "كومبوست خفيف.", method: "سماد عضوي كل 4 أسابيع.", benefits: "فوائد: مضاد التهاب ومخللات / أضرار: اضطراب معدة." },
+            "خبيزة": { region: "برياً، إربد، عجلون.", seeds: "بذور مباشرة.", transfer: "15–20 سم.", weather: "10–25 درجة.", organic: "كومبوست خفيف.", method: "سماد عضوي كل 2–3 أسابيع.", benefits: "فوائد: غنية بالفيتامينات / أضرار: إسهال خفيف." },
+            "رجلة (فرفحينا)": { region: "كل المناطق (برياً).", seeds: "بالبذور أو نمو تلقائي.", transfer: "10–15 سم.", weather: "15–30 درجة.", organic: "كومبوست خفيف جداً.", method: "سماد عضوي كل شهر.", benefits: "فوائد: أوميغا 3 / أضرار: تقلصات بسيطة." },
+            "هندباء": { region: "إربد، عجلون.", seeds: "بذور مباشرة.", transfer: "15–20 سم.", weather: "10–22 درجة.", organic: "كومبوست + زبل خفيف.", method: "سماد عضوي كل 2–3 أسابيع.", benefits: "فوائد: تنظف الكبد / أضرار: إدرار بول." },
+            "سلق بري": { region: "إربد، عجلون جبال.", seeds: "بذور مباشرة.", transfer: "20–30 سم.", weather: "10–25 درجة.", organic: "كومبوست خفيف.", method: "سماد عضوي كل شهر.", benefits: "فوائد: حديد وألياف / أضرار: أوكسالات (كلى)." },
+            "زعتر بري": { region: "عجلون، السلط.", seeds: "بذور أو شتلات.", transfer: "20–30 سم.", weather: "جاف ومعتدل.", organic: "كومبوست خفيف جداً.", method: "سماد عضوي كل شهرين.", benefits: "فوائد: مضاد بكتيري / أضرار: تهيج معدة." },
+            "بصل أخضر": { region: "إربد، المفرق، الأغوار.", seeds: "بذور أو بصيلات.", transfer: "5–10 سم.", weather: "10–25 درجة.", organic: "كومبوست + زبل خفيف.", method: "سماد عضوي كل 2–3 أسابيع.", benefits: "فوائد: يقوي المناعة / أضرار: رائحة فم." },
+            "ثوم أخضر": { region: "إربد، عجلون، المفرق.", seeds: "فصوص ثوم مباشرة.", transfer: "10–15 سم.", weather: "10–22 درجة.", organic: "كومبوست + زبل خفيف.", method: "سماد عضوي كل شهر.", benefits: "فوائد: مضاد بكتيري / أضرار: حرقة معدة." },
+            "فلفل رومي ملوّن": { region: "الأغوار والبيوت البلاستيكية.", seeds: "بذور في مشتل.", transfer: "40–50 سم.", weather: "20–30 درجة.", organic: "كومبوست + زبل متحلل.", method: "نيتروجين ثم بوتاسيوم للإثمار.", benefits: "فوائد: فيتامين C / أضرار: حساسية نادرة." },
+            "بندورة كرزية": { region: "الأغوار والبيوت البلاستيكية.", seeds: "بذور ثم نقل.", transfer: "40–60 سم.", weather: "20–30 درجة.", organic: "كومبوست + زبل + بوتاسيوم.", method: "بوتاسيوم وقت الإثمار.", benefits: "فوائد: تحسن القلب / أضرار: حموضة." },
+            "بندورة عنقودية": { region: "الأغوار، المفرق.", seeds: "بذور ثم نقل.", transfer: "40–60 سم (تعريش).", weather: "20–30 درجة.", organic: "كومبوست + زبل + كالسيوم.", method: "بوتاسيوم وقت العقد.", benefits: "فوائد: إنتاج عالي / أضرار: حموضة." },
+            "خيار بلدي": { region: "الأغوار، إربد، المفرق.", seeds: "بذور مباشرة.", transfer: "30–50 سم.", weather: "20–35 درجة.", organic: "كومبوست + زبل متحلل.", method: "سماد كل 10 أيام.", benefits: "فوائد: يرطب الجسم / أضرار: انتفاخ." },
+            "خيار إنجليزي": { region: "بيوت بلاستيكية (الأغوار).", seeds: "بذور ثم نقل.", transfer: "40–60 سم.", weather: "20–30 درجة.", organic: "كومبوست + زبل خفيف.", method: "نيتروجين ثم بوتاسيوم.", benefits: "فوائد: سهل الهضم / أضرار: غازات." },
+            "كوسا لبنانية": { region: "الأغوار والمناطق الدافئة.", seeds: "بذور مباشرة.", transfer: "70–100 سم.", weather: "20–30 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم وقت الإثمار.", benefits: "فوائد: خفيفة الهضم / أضرار: قليلة." },
+            "باذنجان أسود": { region: "الأغوار، المفرق.", seeds: "بذور ثم نقل.", transfer: "50–70 سم.", weather: "22–32 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: ألياف / أضرار: حساسية." },
+            "باذنجان أبيض": { region: "الأغوار والدافئة.", seeds: "بذور ثم نقل.", transfer: "50–70 سم.", weather: "20–32 درجة.", organic: "كومبوست + زبل متحلل.", method: "سماد دوري.", benefits: "فوائد: خفيف على المعدة / أضرار: انتفاخ." },
+            "باذنجان مخطط": { region: "الأغوار، المفرق.", seeds: "بذور ثم نقل.", transfer: "50–70 سم.", weather: "22–32 درجة.", organic: "كومبوست + زبل + رماد.", method: "نيتروجين ثم بوتاسيوم.", benefits: "فوائد: مضادات أكسدة / أضرار: انتفاخ." },
+            "قرع عسلي": { region: "الأغوار والدافئة.", seeds: "بذور مباشرة.", transfer: "80–120 سم (زاحف).", weather: "20–30 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم وقت الإثمار.", benefits: "فوائد: فيتامينات / أضرار: غازات." },
+            "قرع أخضر طويل": { region: "الأغوار، إربد، المفرق.", seeds: "بذور مباشرة.", transfer: "80–120 سم.", weather: "20–30 درجة.", organic: "كومبوست + زبل متحلل.", method: "سماد كل 2–3 أسابيع.", benefits: "فوائد: مرطب للجسم / أضرار: انتفاخ." },
+            "فطر زراعي": { region: "بيوت مظلمة (جميع المناطق).", seeds: "بيئة عضوية (قش قمح).", transfer: "داخل صناديق.", weather: "15–22 درجة (رطوبة).", organic: "قش قمح + كومبوست فطر.", method: "يعتمد على الوسط العضوي.", benefits: "فوائد: بروتين / أضرار: حساسية." },
+            "فطر محاري": { region: "بيوت مغلقة.", seeds: "قش قمح معقم.", transfer: "في أكياس.", weather: "18–24 درجة.", organic: "قش قمح متحلل.", method: "لا يحتاج تسميد تقليدي.", benefits: "فوائد: يقوي المناعة / أضرار: حساسية نادرة." },
+            "ذرة صفراء علفية": { region: "الأغوار، المفرق، إربد.", seeds: "بذور مباشرة.", transfer: "20–30 سم.", weather: "20–35 درجة.", organic: "كومبوست + زبل أبقار.", method: "نيتروجين قوي.", benefits: "فوائد: علف حيواني / أضرار: ليست غذاء أساسي." },
+            "شعير": { region: "المفرق، إربد (جافة).", seeds: "بذور مباشرة.", transfer: "زراعة كثيفة.", weather: "10–25 درجة.", organic: "كومبوست + زبل خفيف.", method: "سماد خفيف.", benefits: "فوائد: ألياف / أضرار: صعوبة هضم (نيء)." },
+            "قمح": { region: "المفرق، إربد.", seeds: "بذور مباشرة.", transfer: "زراعة كثيفة.", weather: "10–22 درجة.", organic: "كومبوست + زبل متحلل.", method: "بداية النمو فقط.", benefits: "فوائد: طاقة (خبز) / أضرار: جلوتين." },
+            "عدس": { region: "المفرق، إربد.", seeds: "بذور مباشرة.", transfer: "10–15 سم.", weather: "10–25 درجة.", organic: "كومبوست + زبل متحلل.", method: "قليل السماد (يثبت نيتروجين).", benefits: "فوائد: بروتين وحديد / أضرار: غازات." },
+            "حمص يابس": { region: "المفرق، إربد.", seeds: "بذور مباشرة.", transfer: "10–20 سم.", weather: "10–25 درجة.", organic: "كومبوست + زبل خفيف.", method: "سماد عضوي خفيف.", benefits: "فوائد: بروتين / أضرار: انتفاخ." },
+            "فول يابس": { region: "المفرق، إربد، عجلون.", seeds: "بذور مباشرة.", transfer: "15–25 سم.", weather: "10–22 درجة.", organic: "كومبوست + زبل خفيف.", method: "بداية النمو.", benefits: "فوائد: بروتين نباتي / أضرار: غازات." },
+            "أفوكادو": { region: "الأغوار والبيوت البلاستيكية.", seeds: "شتلات مطعّمة.", transfer: "5–7 متر.", weather: "20–35 درجة.", organic: "كومبوست + زبل أبقار.", method: "بوتاسيوم وقت الإثمار.", benefits: "فوائد: دهون صحية / أضرار: سعرات عالية." },
+            "سفرجل": { region: "إربد، عجلون، جرش.", seeds: "شتلات أو عقل.", transfer: "4–5 متر.", weather: "بارد إلى معتدل.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: يقوي المناعة / أضرار: قاسي الهضم." },
+            "نكتارين": { region: "إربد، عجلون، جرش.", seeds: "شتلات مطعّمة.", transfer: "4–5 متر.", weather: "10–28 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: فيتامينات / أضرار: سكر عالي." },
+            "لوز بري": { region: "عجلون، جرش (جبال).", seeds: "شتلات أفضل.", transfer: "4–6 متر.", weather: "معتدل إلى بارد.", organic: "كومبوست + زبل + رماد.", method: "تقليل نيتروجين.", benefits: "فوائد: زيوت قلب / أضرار: سعرات." },
+            "جوز (عين الجمل البري)": { region: "عجلون، جرش.", seeds: "شتلات أسرع.", transfer: "6–8 متر.", weather: "10–25 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: أوميغا 3 / أضرار: سعرات." },
+            "فستق حلبي بري": { region: "المفرق، الأغوار.", seeds: "شتلات مطعّمة.", transfer: "5–7 متر.", weather: "20–40 درجة (حار).", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: دهون صحية / أضرار: سعرات." },
+            "كاكا بري": { region: "الأغوار والدافئة.", seeds: "شتلات مطعّمة.", transfer: "4–6 متر.", weather: "20–35 درجة.", organic: "كومبوست + زبل متحلل.", method: "زيادة بوتاسيوم.", benefits: "فوائد: ألياف / أضرار: سكر عالي." },
+            "توت بري": { region: "المرتفعات والباردة.", seeds: "شتلات أو بذور.", transfer: "2–3 متر.", weather: "10–25 درجة.", organic: "كومبوست خفيف + زبل.", method: "سماد خفيف شهرياً.", benefits: "فوائد: مضادات أكسدة / أضرار: حساسية." },
+            "دراق مسطح": { region: "إربد، عجلون، جرش.", seeds: "شتلات مطعّمة.", transfer: "4–5 متر.", weather: "10–28 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: فيتامينات / أضرار: سكر عالي." },
+            "إجاص بري": { region: "المرتفعات (عجلون وجرش).", seeds: "شتلات أفضل.", transfer: "4–6 متر.", weather: "10–25 درجة.", organic: "كومبوست + زبل متحلل.", method: "تقليل نيتروجين.", benefits: "فوائد: ألياف / أضرار: انتفاخ." },
+            "مرمرية برية": { region: "عجلون وجبال.", seeds: "عقل أو بذور.", transfer: "20–30 سم.", weather: "جاف وبارد.", organic: "كومبوست خفيف جداً.", method: "سماد كل شهرين.", benefits: "فوائد: مهدئ طبيعي / أضرار: جفاف فم." },
+            "قمح بري": { region: "المفرق (جافة).", seeds: "بذور مباشرة.", transfer: "زراعة كثيفة.", weather: "10–22 درجة.", organic: "كومبوست + زبل خفيف.", method: "بداية النمو.", benefits: "فوائد: طاقة / أضرار: جلوتين." },
+            "عدس بري": { region: "المفرق.", seeds: "بذور مباشرة.", transfer: "10–15 سم.", weather: "10–25 درجة.", organic: "كومبوست خفيف.", method: "يثبت نيتروجين.", benefits: "فوائد: بروتين وحديد / أضرار: غازات." },
+            "حمص بري": { region: "المفرق وأراضي مفتوحة.", seeds: "بذور مباشرة.", transfer: "10–20 سم.", weather: "10–25 درجة.", organic: "كومبوست + زبل خفيف.", method: "مرة أو مرتين بالموسم.", benefits: "فوائد: بروتين / أضرار: انتفاخ." },
+            "كمثرى": { region: "عجلون، جرش، إربد المرتفعة.", seeds: "شتلات مطعّمة.", transfer: "4–5 متر.", weather: "10–25 درجة.", organic: "كومبوست + زبل + رماد.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: ألياف / أضرار: انتفاخ." },
+            "خوخ": { region: "عجلون، جرش.", seeds: "شتلات مطعّمة.", transfer: "4–5 متر.", weather: "10–28 درجة.", organic: "كومبوست + زبل أبقار.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: فيتامين A / أضرار: سكر." },
+            "مشمش": { region: "إربد، عجلون، جرش.", seeds: "شتلات مطعّمة.", transfer: "4–5 متر.", weather: "معتدل بارد.", organic: "كومبوست + زبل متحلل.", method: "مرتين لثلاث سنوياً.", benefits: "فوائد: يقوي النظر / أضرار: سكر." },
+            "كرز": { region: "عجلون، جرش (باردة).", seeds: "شتلات مطعّمة.", transfer: "5 متر.", weather: "بارد شتاءً.", organic: "كومبوست + سماد بلدي.", method: "تقليل نيتروجين.", benefits: "فوائد: مضاد التهاب / أضرار: إسهال." },
+            "دراق": { region: "عجلون، جرش.", seeds: "شتلات مطعّمة.", transfer: "4–5 متر.", weather: "10–28 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: مناعة / أضرار: سكر." },
+            "برقوق": { region: "إربد، عجلون، جرش.", seeds: "شتلات مطعّمة.", transfer: "4–5 متر.", weather: "10–25 درجة.", organic: "كومبوست + زبل + رماد.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: هضم / أضرار: إسهال." },
+            "عنب": { region: "إربد، عجلون، المفرق، الأغوار.", seeds: "عقل أو شتلات.", transfer: "2–3 متر.", weather: "15–35 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للجودة.", benefits: "فوائد: طاقة / أضرار: سكر عالي." },
+            "رمان": { region: "الأغوار، إربد، المفرق.", seeds: "شتلات أو عقل.", transfer: "3–4 متر.", weather: "دافئ وجاف.", organic: "كومبوست + زبل متحلل.", method: "زيادة بوتاسيوم.", benefits: "فوائد: يقوي القلب / أضرار: حساسية." },
+            "تين": { region: "إربد، عجلون، الأغوار.", seeds: "عقل أو شتلات.", transfer: "3–4 متر.", weather: "دافئ إلى معتدل.", organic: "كومبوست + زبل متحلل.", method: "مرتين سنوياً.", benefits: "فوائد: ألياف / أضرار: يرفع السكر." },
+            "موز": { region: "الأغوار الدافئة فقط.", seeds: "فسائل.", transfer: "2–3 متر.", weather: "20–35 درجة.", organic: "كومبوست + زبل أبقار.", method: "بوتاسيوم قوي.", benefits: "فوائد: بوتاسيوم / أضرار: سعرات." },
+            "فراولة": { region: "إربد، عجلون، الأغوار.", seeds: "شتلات جاهزة.", transfer: "25–35 سم.", weather: "10–25 درجة.", organic: "كومبوست + زبل دجاج.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: فيتامين C / أضرار: حساسية." },
+            "جوافة": { region: "الأغوار والدافئة.", seeds: "شتلات أو عقل.", transfer: "3–4 متر.", weather: "20–32 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: تقوي المناعة / أضرار: إمساك (نيء)." },
+            "مانجا": { region: "الأغوار فقط.", seeds: "شتلات مطعّمة.", transfer: "5–6 متر.", weather: "25–40 درجة (حار).", organic: "كومبوست + زبل أبقار.", method: "بوتاسيوم قوي.", benefits: "فوائد: فيتامين A / أضرار: سكر عالي." },
+            "كيوي": { region: "عجلون (باردة).", seeds: "شتلات أو عقل.", transfer: "3–4 متر (تعريش).", weather: "10–25 درجة.", organic: "كومبوست + زبل متحلل.", method: "مرتين لثلاث سنوياً.", benefits: "فوائد: فيتامين C / أضرار: حساسية نادرة." },
+            "تمر": { region: "الأغوار الدافئة.", seeds: "فسائل نخيل.", transfer: "6–8 متر.", weather: "20–45 درجة.", organic: "كومبوست + زبل أغنام.", method: "زيادة بوتاسيوم.", benefits: "فوائد: طاقة ومعادن / أضرار: سكر عالي." },
+            "لوز": { region: "إربد، عجلون، جرش.", seeds: "شتلات مطعّمة.", transfer: "4–6 متر.", weather: "10–25 درجة.", organic: "كومبوست + زبل + رماد.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: دهون صحية / أضرار: سعرات." },
+            "جوز (عين الجمل)": { region: "عجلون، جرش، إربد المرتفعة.", seeds: "شتلات أو بذور.", transfer: "6–8 متر.", weather: "بارد إلى معتدل.", organic: "كومبوست + زبل أبقار.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: يقوي الدماغ / أضرار: سعرات." },
+            "فستق حلبي": { region: "المفرق، الأغوار الحارة.", seeds: "شتلات مطعّمة.", transfer: "5–7 متر.", weather: "حار وجاف.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: بروتين / أضرار: سعرات." },
+            "توت": { region: "إربد، عجلون، جرش.", seeds: "شتلات أو عقل.", transfer: "3–5 متر.", weather: "15–28 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: مضادات أكسدة / أضرار: حساسية نادرة." },
+            "توت أسود": { region: "المرتفعات والمعتدلة.", seeds: "عقل أو شتلات.", transfer: "2–3 متر (تعريش).", weather: "معتدل بارد.", organic: "كومبوست + زبل خفيف.", method: "سماد شهرياً.", benefits: "فوائد: يقوي المناعة / أضرار: تلون بول." },
+            "توت أبيض": { region: "إربد، عجلون، جرش.", seeds: "شتلات أو عقل.", transfer: "4–5 متر.", weather: "15–30 درجة.", organic: "كومبوست + زبل متحلل.", method: "مرتين لثلاث سنوياً.", benefits: "فوائد: يقوي الدم / أضرار: انتفاخ." },
+            "كاكا (خرما)": { region: "الأغوار والدافئة.", seeds: "شتلات مطعّمة.", transfer: "4–6 متر.", weather: "20–35 درجة.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: غنية بالألياف / أضرار: سكر عالي." },
+            "أناناس": { region: "بيوت بلاستيكية فقط.", seeds: "تاج الثمرة.", transfer: "30–40 سم.", weather: "22–30 درجة (رطب).", organic: "كومبوست خفيف + زبل مخفف.", method: "سماد شهرياً.", benefits: "فوائد: هضم وإنزيمات / أضرار: تهيج فم." },
+            "باشن فروت": { region: "الأغوار والبيوت البلاستيكية.", seeds: "شتلات (أفضل).", transfer: "2–3 متر (تعريش).", weather: "20–30 درجة.", organic: "كومبوست + زبل خفيف.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: يهدئ الأعصاب / أضرار: نعاس." },
+            "كستناء": { region: "عجلون، جرش (باردة).", seeds: "شتلات (أفضل).", transfer: "6–8 متر.", weather: "بارد شتاءً.", organic: "كومبوست + زبل متحلل.", method: "تقليل نيتروجين.", benefits: "فوائد: كربوهيدرات صحية / أضرار: نشويات." },
+            "تمر هندي": { region: "الأغوار والدافئة.", seeds: "بذور أو شتلات.", transfer: "4–6 متر.", weather: "حار إلى معتدل.", organic: "كومبوست + زبل متحلل.", method: "بوتاسيوم للإثمار.", benefits: "فوائد: يخفض الحرارة / أضرار: حموضة." }
+        };
+
+        function toggleSubMenu() {
+            const menu = document.getElementById('sub-menu-plants');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        function openVegFruit() {
+            document.getElementById('veg-fruit-section').style.display = 'block';
+            const grid = document.getElementById('itemsGrid');
+            grid.innerHTML = '';
+            vegFruitData.forEach(item => {
+                const btn = document.createElement('div');
+                btn.className = 'item-btn';
+                btn.innerHTML = `<i class="${item.icon}"></i>${item.name}`;
+                btn.onclick = () => openDetails(item);
+                grid.appendChild(btn);
+            });
+            window.scrollTo({ top: document.getElementById('veg-fruit-section').offsetTop, behavior: 'smooth' });
+        }
+
+        function filterItems() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const btns = document.getElementsByClassName('item-btn');
+            for (let btn of btns) {
+                btn.style.display = btn.innerText.includes(input) ? "block" : "none";
+            }
+        }
+
+        function openDetails(item) {
+            document.getElementById('mainPage').style.display = 'none';
+            document.getElementById('detailsPage').style.display = 'block';
+            document.getElementById('detailsIcon').innerHTML = `<i class="${item.icon}"></i>`;
+            document.getElementById('detailsTitle').innerText = item.name;
+            
+            const contentDiv = document.getElementById('detailsContent');
+            const g = cropGuides[item.name];
+            
+            if(g) {
+                contentDiv.innerHTML = `
+                    <div class="info-section"><h4>📍 1- مناطق الزراعة في الأردن</h4><p>${g.region}</p></div>
+                    <div class="info-section"><h4>🌱 2- طريقة الزراعة</h4><p>${g.seeds}</p></div>
+                    <div class="info-section"><h4>🚜 3- النقل والمسافات</h4><p>${g.transfer}</p></div>
+                    <div class="info-section"><h4>☀️ 4- الجو المناسب</h4><p>${g.weather}</p></div>
+                    <div class="info-section"><h4>🍃 5- أفضل أنواع الأسمدة الطبيعية</h4><p>${g.organic}</p></div>
+                    <div class="info-section"><h4>🧪 6- طريقة التسميد</h4><p>${g.method}</p></div>
+                    <div class="info-section"><h4>⚖️ 7- الفوائد والأضرار</h4><p>${g.benefits}</p></div>
+                `;
+            } else {
+                contentDiv.innerHTML = `<div class="info-section"><h4>⚠️ تنبيه</h4><p>يرجى تزويدنا بالشرح الخاص بهذا الصنف لإضافته للكود.</p></div>`;
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function goBack() {
+            document.getElementById('detailsPage').style.display = 'none';
+            document.getElementById('mainPage').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
