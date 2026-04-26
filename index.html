@@ -45,9 +45,20 @@
         .cat-card {
             background: var(--glass-panel); border: 1px solid rgba(255,255,255,0.1);
             padding: 30px; border-radius: 25px; text-align: center; cursor: pointer;
+            position: relative; /* للإبقاء على زر الحذف في الزاوية */
         }
         .cat-card:hover { border-color: var(--neon-green); transform: translateY(-10px); background: rgba(0,255,136,0.05); }
         .cat-card img { width: 90px; height: 90px; border-radius: 20px; object-fit: cover; margin-bottom: 15px; }
+
+        /* زر حذف الصنف الجديد */
+        .delete-cat-btn {
+            position: absolute; top: 10px; left: 10px;
+            width: 25px; height: 25px; background: rgba(255, 75, 75, 0.2);
+            color: var(--danger); border: 1px solid var(--danger);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-weight: bold; font-size: 12px; z-index: 10;
+        }
+        .delete-cat-btn:hover { background: var(--danger); color: white; }
 
         #subPage, #detailPage { display: none; animation: slideUp 0.5s ease; }
         .sub-header { display: flex; align-items: center; gap: 20px; margin-bottom: 40px; }
@@ -61,7 +72,6 @@
 
         .notes-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
         
-        /* تصميم الملاحظة مع زر الحذف */
         .note-card {
             background: rgba(255,255,255,0.02); border-right: 4px solid var(--cyber-blue);
             padding: 20px; border-radius: 15px; position: relative;
@@ -112,6 +122,7 @@
             <input type="number" id="tDays" placeholder="أيام" style="width: 70px;">
             <input type="number" id="tHours" placeholder="ساعات" style="width: 70px;">
             <input type="number" id="tMins" placeholder="دقائق" style="width: 70px;">
+            <input type="text" id="notifMsg" placeholder="تفاصيل رسالة الهاتف..." style="width: 180px;">
             <button onclick="startTimer()" style="background:var(--neon-green); border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;">ابدأ التوقيت</button>
         </div>
         <div class="clock" id="clock">00ي : 00س : 00د</div>
@@ -186,6 +197,7 @@
             db.cats.push({ id: Date.now(), name, icon: r.result });
             render();
             document.getElementById('catInp').value = '';
+            document.getElementById('iconInp').value = '';
         };
     }
 
@@ -195,11 +207,24 @@
         grid.innerHTML = '';
         db.cats.forEach(c => {
             grid.innerHTML += `
-                <div class="cat-card" onclick="openCat(${c.id}, '${c.name}')">
-                    <img src="${c.icon}">
-                    <h3>${c.name}</h3>
+                <div class="cat-card">
+                    <div class="delete-cat-btn" onclick="deleteCat(event, ${c.id})">X</div>
+                    <div onclick="openCat(${c.id}, '${c.name}')">
+                        <img src="${c.icon}">
+                        <h3>${c.name}</h3>
+                    </div>
                 </div>`;
         });
+    }
+
+    // وظيفة حذف الصنف الجديد
+    function deleteCat(event, id) {
+        event.stopPropagation(); // منع فتح القسم عند الضغط على الحذف
+        if(confirm("هل أنت متأكد من حذف هذا الصنف بالكامل مع جميع ملاحظاته وصوره؟")) {
+            db.cats = db.cats.filter(c => c.id !== id);
+            db.notes = db.notes.filter(n => n.catId !== id);
+            render();
+        }
     }
 
     function openCat(id, name) {
@@ -344,7 +369,25 @@
             let mins = Math.floor((total % 3600) / 60);
             let secs = total % 60;
             document.getElementById('clock').innerText = `${days}ي : ${hours}س : ${mins}د : ${secs}ث`;
-            if(total-- <= 0) { clearInterval(interval); new Notification("نشمي الزراعي: انتهى الوقت!"); }
+            
+            if(total-- <= 0) { 
+                clearInterval(interval); 
+                new Notification("نشمي الزراعي: انتهى الوقت!"); 
+
+                let userMsg = document.getElementById('notifMsg').value;
+                if (!userMsg) userMsg = "يا نشمي، انتهى الوقت المحددد! تفقد أمور الزرع 🌿🇯🇴";
+                const msg = encodeURIComponent(userMsg);
+                
+                const url = `https://ntfy.sh/nashmi_jordan/publish?message=${msg}&title=نشمي_الزراعي&priority=5&tags=warning,tractor`;
+                fetch(url, { method: 'GET', mode: 'no-cors' }).catch(() => { let img = new Image(); img.src = url; });
+                try {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const oscillator = audioCtx.createOscillator();
+                    oscillator.connect(audioCtx.destination);
+                    oscillator.start(); oscillator.stop(audioCtx.currentTime + 1);
+                } catch(e) {}
+                alert("⚠️ انتهى الوقت! تأكد من وصول الإشعار لهاتفك (nashmi_jordan)");
+            }
         }, 1000);
     }
 
