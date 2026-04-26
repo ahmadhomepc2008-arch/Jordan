@@ -45,12 +45,11 @@
         .cat-card {
             background: var(--glass-panel); border: 1px solid rgba(255,255,255,0.1);
             padding: 30px; border-radius: 25px; text-align: center; cursor: pointer;
-            position: relative; /* للإبقاء على زر الحذف في الزاوية */
+            position: relative;
         }
         .cat-card:hover { border-color: var(--neon-green); transform: translateY(-10px); background: rgba(0,255,136,0.05); }
         .cat-card img { width: 90px; height: 90px; border-radius: 20px; object-fit: cover; margin-bottom: 15px; }
 
-        /* زر حذف الصنف الجديد */
         .delete-cat-btn {
             position: absolute; top: 10px; left: 10px;
             width: 25px; height: 25px; background: rgba(255, 75, 75, 0.2);
@@ -125,7 +124,7 @@
             <input type="text" id="notifMsg" placeholder="تفاصيل رسالة الهاتف..." style="width: 180px;">
             <button onclick="startTimer()" style="background:var(--neon-green); border:none; padding:10px 20px; border-radius:10px; cursor:pointer; font-weight:bold;">ابدأ التوقيت</button>
         </div>
-        <div class="clock" id="clock">00ي : 00س : 00د</div>
+        <div class="clock" id="clock">00ي : 00س : 00د : 00ث</div>
     </div>
 
     <div style="background: var(--glass-panel); padding: 20px; border-radius: 20px; margin-bottom: 30px; border: 1px solid rgba(255,255,255,0.05);">
@@ -186,6 +185,12 @@
     let currentNoteId = null;
     let editNoteId = null;
     let stream = null;
+    let timerInterval = null;
+
+    window.onload = function() {
+        checkActiveTimer();
+        render();
+    };
 
     function saveCat() {
         const name = document.getElementById('catInp').value;
@@ -217,14 +222,66 @@
         });
     }
 
-    // وظيفة حذف الصنف الجديد
     function deleteCat(event, id) {
-        event.stopPropagation(); // منع فتح القسم عند الضغط على الحذف
-        if(confirm("هل أنت متأكد من حذف هذا الصنف بالكامل مع جميع ملاحظاته وصوره؟")) {
+        event.stopPropagation();
+        if(confirm("هل أنت متأكد من حذف هذا الصنف بالكامل؟")) {
             db.cats = db.cats.filter(c => c.id !== id);
             db.notes = db.notes.filter(n => n.catId !== id);
             render();
         }
+    }
+
+    function startTimer() {
+        const d = parseInt(document.getElementById('tDays').value) || 0;
+        const h = parseInt(document.getElementById('tHours').value) || 0;
+        const m = parseInt(document.getElementById('tMins').value) || 0;
+        let totalSeconds = (d * 86400) + (h * 3600) + (m * 60);
+        
+        if(totalSeconds <= 0) return;
+
+        const endTime = Date.now() + (totalSeconds * 1000);
+        const userMsg = document.getElementById('notifMsg').value || "يا نشمي، انتهى الوقت المحددد! تفقد أمور الزرع 🌿🇯🇴";
+        
+        localStorage.setItem('timerEndTime', endTime);
+        localStorage.setItem('timerMsg', userMsg);
+
+        // إرسال الإشعار المجدول (المؤجل) فوراً لـ ntfy
+        const delayStr = `${totalSeconds}s`;
+        const msgEncoded = encodeURIComponent(userMsg);
+        const url = `https://ntfy.sh/nashmi_jordan/publish?message=${msgEncoded}&title=نشمي_الزراعي&priority=5&tags=warning,tractor&delay=${delayStr}`;
+        
+        fetch(url, { method: 'GET', mode: 'no-cors' });
+
+        runClock(endTime);
+        alert("✅ تم ضبط الوقت. الإشعار سيصل لهاتفك حتى لو أغلقت الموقع.");
+    }
+
+    function checkActiveTimer() {
+        const endTime = localStorage.getItem('timerEndTime');
+        if (endTime && Date.now() < endTime) {
+            runClock(parseInt(endTime));
+        }
+    }
+
+    function runClock(endTime) {
+        if(timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            let now = Date.now();
+            let remaining = Math.floor((endTime - now) / 1000);
+
+            if (remaining <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('clock').innerText = "00ي : 00س : 00د : 00ث";
+                localStorage.removeItem('timerEndTime');
+                return;
+            }
+
+            let days = Math.floor(remaining / 86400);
+            let hours = Math.floor((remaining % 86400) / 3600);
+            let mins = Math.floor((remaining % 3600) / 60);
+            let secs = remaining % 60;
+            document.getElementById('clock').innerText = `${days}ي : ${hours}س : ${mins}د : ${secs}ث`;
+        }, 1000);
     }
 
     function openCat(id, name) {
@@ -252,7 +309,7 @@
     }
 
     function deleteNote(id) {
-        if(confirm("هل أنت متأكد من حذف هذه الملاحظة وسجل صورها؟")) {
+        if(confirm("هل أنت متأكد من حذف هذه الملاحظة؟")) {
             db.notes = db.notes.filter(n => n.id !== id);
             localStorage.setItem('AgriJordan_DB', JSON.stringify(db));
             searchInside();
@@ -354,44 +411,7 @@
 
     function backToHome() { document.getElementById('homePage').style.display = 'block'; document.getElementById('subPage').style.display = 'none'; render(); }
     function backToSub() { stopCamera(); document.getElementById('detailPage').style.display = 'none'; document.getElementById('subPage').style.display = 'block'; }
-
     function askPermission() { Notification.requestPermission(); }
-
-    function startTimer() {
-        const d = parseInt(document.getElementById('tDays').value) || 0;
-        const h = parseInt(document.getElementById('tHours').value) || 0;
-        const m = parseInt(document.getElementById('tMins').value) || 0;
-        let total = (d * 86400) + (h * 3600) + (m * 60);
-        if(total <= 0) return;
-        let interval = setInterval(() => {
-            let days = Math.floor(total / 86400);
-            let hours = Math.floor((total % 86400) / 3600);
-            let mins = Math.floor((total % 3600) / 60);
-            let secs = total % 60;
-            document.getElementById('clock').innerText = `${days}ي : ${hours}س : ${mins}د : ${secs}ث`;
-            
-            if(total-- <= 0) { 
-                clearInterval(interval); 
-                new Notification("نشمي الزراعي: انتهى الوقت!"); 
-
-                let userMsg = document.getElementById('notifMsg').value;
-                if (!userMsg) userMsg = "يا نشمي، انتهى الوقت المحددد! تفقد أمور الزرع 🌿🇯🇴";
-                const msg = encodeURIComponent(userMsg);
-                
-                const url = `https://ntfy.sh/nashmi_jordan/publish?message=${msg}&title=نشمي_الزراعي&priority=5&tags=warning,tractor`;
-                fetch(url, { method: 'GET', mode: 'no-cors' }).catch(() => { let img = new Image(); img.src = url; });
-                try {
-                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                    const oscillator = audioCtx.createOscillator();
-                    oscillator.connect(audioCtx.destination);
-                    oscillator.start(); oscillator.stop(audioCtx.currentTime + 1);
-                } catch(e) {}
-                alert("⚠️ انتهى الوقت! تأكد من وصول الإشعار لهاتفك (nashmi_jordan)");
-            }
-        }, 1000);
-    }
-
-    render();
 </script>
 </body>
 </html>
